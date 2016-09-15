@@ -83,3 +83,13 @@ rsn <- rowSums(as.matrix(tdmt[ttn,]))
 
 Stg <- grep("hate", docstwt, value = TRUE)
 stg <- as.data.frame(Stg)
+
+
+
+library("quanteda")
+qdtwt <- textfile("final/en_US/en_US.twitter.txt")
+qdtwtC <- corpus(qdtwt)
+
+DfmTwt <- dfm(qdtwtC)
+StemDfmTwt <- dfm(qdtwtC, ignoredFeatures = stopwords("english"), stem = TRUE)
+topfeatures(StemDfmTwt, 100)
