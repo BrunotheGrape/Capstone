@@ -55,6 +55,7 @@ dtc <- tm_map(dtc, tolower)
 dtc <- tm_map(dtc, removeWords, stopwords("english"))
 dtc <- tm_map(dtc, stemDocument)
 dtc <- tm_map(dtc, stripWhitespace)
+dtcc <- dtc
 dtc <- tm_map(dtc, PlainTextDocument)
 
 tdmt <- TermDocumentMatrix(dtc)
@@ -77,3 +78,8 @@ tdmn <- TermDocumentMatrix(dnc)
 ttn <- findFreqTerms(tdmn, lowfreq = 2000)
 ttndt <- as.data.frame(ttn)
 rsn <- rowSums(as.matrix(tdmt[ttn,]))
+
+
+
+Stg <- grep("hate", docstwt, value = TRUE)
+stg <- as.data.frame(Stg)
