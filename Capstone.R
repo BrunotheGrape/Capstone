@@ -89,7 +89,23 @@ stg <- as.data.frame(Stg)
 library("quanteda")
 qdtwt <- textfile("final/en_US/en_US.twitter.txt")
 qdtwtC <- corpus(qdtwt)
+summary(qdtwtC)
+kwic(qdtwtC, "economic", valuetype = "regex")
 
 DfmTwt <- dfm(qdtwtC)
+summary(DfmTwt)
 StemDfmTwt <- dfm(qdtwtC, ignoredFeatures = stopwords("english"), stem = TRUE)
 topfeatures(StemDfmTwt, 100)
+
+
+
+qdblg <- textfile("final/en_US/en_US.blogs.txt")
+qdblgC <- corpus(qdtwt)
+summary(qdtwtC)
+kwic(qdblgC, "economic", valuetype = "regex")
+
+DfmBlg <- dfm(qdblgC)
+summary(DfmBlg)
+StemDfmTwt <- dfm(qdtwtC, ignoredFeatures = stopwords("english"), stem = TRUE)
+topfeatures(StemDfmTwt, 100)
+
