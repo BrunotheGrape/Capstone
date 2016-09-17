@@ -86,7 +86,7 @@ stg <- as.data.frame(Stg)
 
 
 
-library("quanteda")
+library("quanteda"); library(data.table); library(ggplot2); library(dplyr)
 qdtwt <- textfile("final/en_US/en_US.twitter.txt")
 qdtwtC <- corpus(qdtwt)
 summary(qdtwtC)
@@ -97,15 +97,19 @@ summary(DfmTwt)
 StemDfmTwt <- dfm(qdtwtC, ignoredFeatures = stopwords("english"), stem = TRUE)
 topfeatures(StemDfmTwt, 100)
 
-
+tknTwt <- tokenize(qdtwtC, removeNumbers = TRUE, removePunctuation = TRUE)
+summary(tknTwt)
 
 qdblg <- textfile("final/en_US/en_US.blogs.txt")
 qdblgC <- corpus(qdtwt)
-summary(qdtwtC)
+summary(qdblgC)
 kwic(qdblgC, "economic", valuetype = "regex")
 
 DfmBlg <- dfm(qdblgC)
 summary(DfmBlg)
-StemDfmTwt <- dfm(qdtwtC, ignoredFeatures = stopwords("english"), stem = TRUE)
-topfeatures(StemDfmTwt, 100)
-
+StemDfmBlg <- dfm(qdblgC, ignoredFeatures = stopwords("english"), stem = TRUE)
+tfblg <- as.data.frame(topfeatures(StemDfmBlg, 100))
+tfblg <- setDT(tfblg, keep.rownames = TRUE)
+colnames(tfblg) <- c("word", "cnt")
+ptfb <- ggplot(tfblg, aes(word, cnt)) + geom_point()
+ptfb
