@@ -133,7 +133,7 @@ blg3g <- features(dfm(qdBlgC, ngrams = 3, ignoredFeatures = stopwords("english")
 set.seed(1234)
 docsblg <- readLines( "final/en_US/en_US.blogs.txt")
 docsblg <- as.data.frame(docsblg)
-dfblg <- docsblg[sample(nrow(docsblg), 500),]
+dfblg <- docsblg[sample(nrow(docsblg), 50),]
 dfblg <- as.character(dfblg)
 qdBlgC <- corpus(dfblg)
 summary(qdBlgC)
@@ -157,6 +157,40 @@ blg2gC <- corpus(blg2g)
 summary(blg2g)
 
 dfBlg2g <- dfm(blg2gC)
-tfblg2g <- as.data.frame(topfeatures(dfBlg2g, 500))
+tfblg2g <- as.data.frame(topfeatures(dfBlg2g, 5000))
 tfblg2g <- setDT(tfblg2g, keep.rownames = TRUE)
 colnames(tfblg2g) <- c("2gram", "cnt")
+
+blg3gC <- corpus(blg3g)
+summary(blg3g)
+
+dfBlg3g <- dfm(blg3gC)
+tfblg3g <- as.data.frame(topfeatures(dfBlg3g, 5000))
+tfblg3g <- setDT(tfblg3g, keep.rownames = TRUE)
+colnames(tfblg3g) <- c("3gram", "cnt")
+
+
+library("quanteda"); library(data.table); library(ggplot2)
+library(dplyr); library(qdap)
+
+set.seed(1234)
+docsblg <- readLines( "final/en_US/en_US.blogs.txt")
+docsnws <- readLines( "final/en_US/en_US.news.txt")
+docstwt <- readLines( "final/en_US/en_US.twitter.txt")
+
+docsblg <- as.data.frame(docsblg)
+dfblg <- docsblg[sample(nrow(docsblg), 50),]
+dfblg <- as.character(dfblg)
+docsnws <- as.data.frame(docsnws)
+dfnws <- docsblg[sample(nrow(docsnws), 50),]
+dfnws <- as.character(dfblg)
+docstwt <- as.data.frame(docstwt)
+dftwt <- docsblg[sample(nrow(docstwt), 50),]
+dftwt <- as.character(dftwt)
+
+dfz <- rbind(dfblg, dfnws)
+dfz <- rbind(dfz,dftwt)
+
+dfblgt <-gsub("[^[:alpha:][:space:]']", " ", dfblg)
+dfblgt <- as.data.frame(dfblgt)
+dfblg <- as.data.frame(dfblg)
