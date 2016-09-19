@@ -86,7 +86,8 @@ stg <- as.data.frame(Stg)
 
 
 
-library("quanteda"); library(data.table); library(ggplot2); library(dplyr)
+library("quanteda"); library(data.table); library(ggplot2)
+library(dplyr)
 qdtwt <- textfile("final/en_US/en_US.twitter.txt")
 qdtwtC <- corpus(qdtwt)
 summary(qdtwtC)
@@ -95,21 +96,67 @@ kwic(qdtwtC, "economic", valuetype = "regex")
 DfmTwt <- dfm(qdtwtC)
 summary(DfmTwt)
 StemDfmTwt <- dfm(qdtwtC, ignoredFeatures = stopwords("english"), stem = TRUE)
-topfeatures(StemDfmTwt, 100)
+tfTwt <- topfeatures(StemDfmTwt, 100)
+tfTwt <- setDT(tfTwt, keep.rownames = TRUE)
+colnames(tfTwt) <- c("word", "cnt")
+ptft <- ggplot(tfTwt, aes(word, cnt)) + geom_point()
+ptft
 
-tknTwt <- tokenize(qdtwtC, removeNumbers = TRUE, removePunctuation = TRUE)
+
+tknTwt <- tokenize(qdtwtC, verbose = TRUE)
 summary(tknTwt)
 
-qdblg <- textfile("final/en_US/en_US.blogs.txt")
-qdblgC <- corpus(qdtwt)
-summary(qdblgC)
-kwic(qdblgC, "economic", valuetype = "regex")
+Twt2g <- features(dfm(qdtwtC, ngrams = 2, ignoredFeatures = stopwords("english")))
+Twt3g <- features(dfm(qdtwtC, ngrams = 3, ignoredFeatures = stopwords("english")))
 
-DfmBlg <- dfm(qdblgC)
+
+qdBlg <- textfile("final/en_US/en_US.blogs.txt")
+qdBlgC <- corpus(qdBlg)
+summary(qdBlgC)
+kwic(qdBlgC, "economic", valuetype = "regex")
+
+DfmBlg <- dfm(qdBlgC)
 summary(DfmBlg)
-StemDfmBlg <- dfm(qdblgC, ignoredFeatures = stopwords("english"), stem = TRUE)
-tfblg <- as.data.frame(topfeatures(StemDfmBlg, 100))
-tfblg <- setDT(tfblg, keep.rownames = TRUE)
-colnames(tfblg) <- c("word", "cnt")
+StemDfmBlg <- dfm(qdBlgC, ignoredFeatures = stopwords("english"), stem = TRUE)
+tfBlg <- as.data.frame(topfeatures(StemDfmBlg, 100))
+tfBlg <- setDT(tfBlg, keep.rownames = TRUE)
+colnames(tfBlg) <- c("word", "cnt")
 ptfb <- ggplot(tfblg, aes(word, cnt)) + geom_point()
 ptfb
+
+tknBlg <- tokenize(qdBlgC, verbose = TRUE)
+
+
+blg2g <- features(dfm(qdBlgC, ngrams = 2, ignoredFeatures = stopwords("english")))
+blg3g <- features(dfm(qdBlgC, ngrams = 3, ignoredFeatures = stopwords("english")))
+
+set.seed(1234)
+docsblg <- readLines( "final/en_US/en_US.blogs.txt")
+docsblg <- as.data.frame(docsblg)
+dfblg <- docsblg[sample(nrow(docsblg), 500),]
+dfblg <- as.character(dfblg)
+qdBlgC <- corpus(dfblg)
+summary(qdBlgC)
+kwic(qdBlgC, "economic", valuetype = "regex")
+
+DfmBlg <- dfm(qdBlgC)
+summary(DfmBlg)
+StemDfmBlg <- dfm(qdBlgC, stem = TRUE)
+tfBlg <- as.data.frame(topfeatures(StemDfmBlg, 100))
+tfBlg <- setDT(tfBlg, keep.rownames = TRUE)
+colnames(tfBlg) <- c("word", "cnt")
+ptfb <- ggplot(tfBlg, aes(word, cnt)) + geom_point()
+ptfb
+
+tknBlg <- tokenize(qdBlgC, verbose = TRUE)
+
+blg2g <- features(dfm(qdBlgC, ngrams = 2, ignoredFeatures = stopwords("english")))
+blg3g <- features(dfm(qdBlgC, ngrams = 3, ignoredFeatures = stopwords("english")))
+
+blg2gC <- corpus(blg2g)
+summary(blg2g)
+
+dfBlg2g <- dfm(blg2gC)
+tfblg2g <- as.data.frame(topfeatures(dfBlg2g, 500))
+tfblg2g <- setDT(tfblg2g, keep.rownames = TRUE)
+colnames(tfblg2g) <- c("2gram", "cnt")
