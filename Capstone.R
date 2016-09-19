@@ -178,19 +178,37 @@ docsblg <- readLines( "final/en_US/en_US.blogs.txt")
 docsnws <- readLines( "final/en_US/en_US.news.txt")
 docstwt <- readLines( "final/en_US/en_US.twitter.txt")
 
-docsblg <- as.data.frame(docsblg)
-dfblg <- docsblg[sample(nrow(docsblg), 50),]
-dfblg <- as.character(dfblg)
-docsnws <- as.data.frame(docsnws)
-dfnws <- docsblg[sample(nrow(docsnws), 50),]
-dfnws <- as.character(dfblg)
-docstwt <- as.data.frame(docstwt)
-dftwt <- docsblg[sample(nrow(docstwt), 50),]
-dftwt <- as.character(dftwt)
+dfblg <- as.data.frame(docsblg)
+dfblg <- dfblg[sample(nrow(dfblg), 50),]
+dfblg <-gsub("[^[:alpha:][:space:]']", " ", dfblg)
+dfnws <- as.data.frame(docsnws)
+dfnws <- dfnws[sample(nrow(dfnws), 50),]
+dfnws <-gsub("[^[:alpha:][:space:]']", " ", dfnws)
+dftwt <- as.data.frame(docstwt)
+dftwt <- dftwt[sample(nrow(dftwt), 50),]
+dftwt <-gsub("[^[:alpha:][:space:]']", " ", dftwt)
 
-dfz <- rbind(dfblg, dfnws)
-dfz <- rbind(dfz,dftwt)
+dfb <- as.data.frame(dfblg)
+dfn <- as.data.frame(dfnws)
+dft <- as.data.frame(dftwt)
 
-dfblgt <-gsub("[^[:alpha:][:space:]']", " ", dfblg)
-dfblgt <- as.data.frame(dfblgt)
-dfblg <- as.data.frame(dfblg)
+colnames(dfb) <- "txt"; colnames(dfn) <- "txt"; colnames(dft) <- "txt"
+
+dfz <- rbind(dfb, dfn)
+dfz <- rbind(dfz,dft)
+
+dfz <- as.character(dfz$txt)
+dfzC <- corpus(dfz)
+DfN2 <- dfm(dfz, ngrams = 2, verbose = TRUE, concatenator = " ", stopwords=TRUE)
+MatN2 <- as.data.frame(as.matrix(docfreq(DfN2)))
+MatN2 <- sort(rowSums(DfN2.mat), decreasing=TRUE)
+
+
+# ng2.FreqTable <- data.frame(Words=names(ng2.sorted), Frequency = ng2.sorted)
+# ng2.Plot <- ggplot(within(ng2.FreqTable[1:15, ], Words <- factor(Words, levels=Words)), aes(Words, Frequency))
+# ng2.Plot <- ng2.Plot + geom_bar(stat="identity", fill="maroon") + ggtitle("Top 15 Bigrams")
+# ng2.Plot <- ng2.Plot + theme(axis.text.x=element_text(angle=45, hjust=1))
+# ng2.Plot
+# 
+# 
+# 
