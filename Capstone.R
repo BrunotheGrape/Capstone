@@ -201,14 +201,35 @@ dfz <- as.character(dfz$txt)
 dfzC <- corpus(dfz)
 DfN2 <- dfm(dfz, ngrams = 2, verbose = TRUE, concatenator = " ", stopwords=TRUE)
 MatN2 <- as.data.frame(as.matrix(docfreq(DfN2)))
-MatN2 <- sort(rowSums(DfN2.mat), decreasing=TRUE)
+#MatN2 <- sort(rowSums(DfN2.mat), decreasing=TRUE)
 
 
-# ng2.FreqTable <- data.frame(Words=names(ng2.sorted), Frequency = ng2.sorted)
-# ng2.Plot <- ggplot(within(ng2.FreqTable[1:15, ], Words <- factor(Words, levels=Words)), aes(Words, Frequency))
-# ng2.Plot <- ng2.Plot + geom_bar(stat="identity", fill="maroon") + ggtitle("Top 15 Bigrams")
-# ng2.Plot <- ng2.Plot + theme(axis.text.x=element_text(angle=45, hjust=1))
-# ng2.Plot
-# 
-# 
-# 
+FtN2 <- setDT(MatN2, keep.rownames = TRUE)
+colnames(FtN2) <- c("Bigram", "Frequency")
+FtN2 <- arrange(FtN2, desc(Frequency))
+Pn2 <- ggplot(FtN2[1:15, ], aes(Bigram, Frequency))
+Pn2 <- Pn2 + geom_bar(stat="identity", fill="green") + ggtitle("Largest 15 Bigrams")
+Pn2 <- Pn2 + theme(axis.text.x=element_text(angle=45, hjust=1))
+Pn2
+
+DfN3 <- dfm(dfz, ngrams = 3, verbose = TRUE, concatenator = " ", stopwords=TRUE)
+MatN3 <- as.data.frame(as.matrix(docfreq(DfN3)))
+
+FtN3 <- setDT(MatN3, keep.rownames = TRUE)
+colnames(FtN3) <- c("Trigram", "Frequency")
+FtN3 <- arrange(FtN3, desc(Frequency))
+Pn3 <- ggplot(FtN3[1:15, ], aes(Trigram, Frequency))
+Pn3 <- Pn3 + geom_bar(stat="identity", fill="green") + ggtitle("Largest 15 trigrams")
+Pn3 <- Pn3 + theme(axis.text.x=element_text(angle=45, hjust=1))
+Pn3
+
+DfN1 <- dfm(dfz, ngrams = 1, verbose = TRUE, concatenator = " ", stopwords=TRUE)
+MatN1 <- as.data.frame(as.matrix(docfreq(DfN1)))
+
+FtN1 <- setDT(MatN1, keep.rownames = TRUE)
+colnames(FtN1) <- c("Word", "Frequency")
+FtN1 <- arrange(FtN1, desc(Frequency))
+Pn1 <- ggplot(FtN1[1:15, ], aes(Word, Frequency))
+Pn1 <- Pn1 + geom_bar(stat="identity", fill="green") + ggtitle("15 Most Common Words")
+Pn1 <- Pn1 + theme(axis.text.x=element_text(angle=45, hjust=1))
+Pn1
