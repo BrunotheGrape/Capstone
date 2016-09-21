@@ -171,7 +171,7 @@ colnames(tfblg3g) <- c("3gram", "cnt")
 
 
 library("quanteda"); library(data.table); library(ggplot2)
-library(dplyr); library(qdap)
+library(dplyr); library(qdap); library(RColorBrewer)
 
 set.seed(1234)
 docsblg <- readLines( "final/en_US/en_US.blogs.txt")
@@ -179,13 +179,13 @@ docsnws <- readLines( "final/en_US/en_US.news.txt")
 docstwt <- readLines( "final/en_US/en_US.twitter.txt")
 
 dfblg <- as.data.frame(docsblg)
-dfblg <- dfblg[sample(nrow(dfblg), 50),]
+dfblg <- dfblg[sample(nrow(dfblg), 5000),]
 dfblg <-gsub("[^[:alpha:][:space:]']", " ", dfblg)
 dfnws <- as.data.frame(docsnws)
-dfnws <- dfnws[sample(nrow(dfnws), 50),]
+dfnws <- dfnws[sample(nrow(dfnws), 5000),]
 dfnws <-gsub("[^[:alpha:][:space:]']", " ", dfnws)
 dftwt <- as.data.frame(docstwt)
-dftwt <- dftwt[sample(nrow(dftwt), 50),]
+dftwt <- dftwt[sample(nrow(dftwt), 5000),]
 dftwt <-gsub("[^[:alpha:][:space:]']", " ", dftwt)
 
 dfb <- as.data.frame(dfblg)
@@ -208,7 +208,7 @@ FtN2 <- setDT(MatN2, keep.rownames = TRUE)
 colnames(FtN2) <- c("Bigram", "Frequency")
 FtN2 <- arrange(FtN2, desc(Frequency))
 Pn2 <- ggplot(FtN2[1:15, ], aes(Bigram, Frequency))
-Pn2 <- Pn2 + geom_bar(stat="identity", fill="green") + ggtitle("Largest 15 Bigrams")
+Pn2 <- Pn2 + geom_bar(stat="identity", fill="cyan") + ggtitle("15 Most Common Bigrams")
 Pn2 <- Pn2 + theme(axis.text.x=element_text(angle=45, hjust=1))
 Pn2
 
@@ -219,7 +219,7 @@ FtN3 <- setDT(MatN3, keep.rownames = TRUE)
 colnames(FtN3) <- c("Trigram", "Frequency")
 FtN3 <- arrange(FtN3, desc(Frequency))
 Pn3 <- ggplot(FtN3[1:15, ], aes(Trigram, Frequency))
-Pn3 <- Pn3 + geom_bar(stat="identity", fill="green") + ggtitle("Largest 15 trigrams")
+Pn3 <- Pn3 + geom_bar(stat="identity", fill="violetred") + ggtitle("15 Most Common Trigrams")
 Pn3 <- Pn3 + theme(axis.text.x=element_text(angle=45, hjust=1))
 Pn3
 
@@ -230,6 +230,6 @@ FtN1 <- setDT(MatN1, keep.rownames = TRUE)
 colnames(FtN1) <- c("Word", "Frequency")
 FtN1 <- arrange(FtN1, desc(Frequency))
 Pn1 <- ggplot(FtN1[1:15, ], aes(Word, Frequency))
-Pn1 <- Pn1 + geom_bar(stat="identity", fill="green") + ggtitle("15 Most Common Words")
+Pn1 <- Pn1 + geom_bar(stat="identity", fill="bisque") + ggtitle("15 Most Common Words")
 Pn1 <- Pn1 + theme(axis.text.x=element_text(angle=45, hjust=1))
 Pn1
