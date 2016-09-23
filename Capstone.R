@@ -233,3 +233,16 @@ Pn1 <- ggplot(FtN1[1:15, ], aes(Word, Frequency))
 Pn1 <- Pn1 + geom_bar(stat="identity", fill="bisque") + ggtitle("15 Most Common Words")
 Pn1 <- Pn1 + theme(axis.text.x=element_text(angle=45, hjust=1))
 Pn1
+
+library("textcat"); library(dplyr)
+
+Lang <- as.data.frame(textcat(dfnws, p = ECIMCI_profiles))
+colnames(Lang) <- c("language")
+lancnt <- count(Lang, language)
+lancnt <- arrange(lancnt, desc(n))
+
+wrdFreq <- setDT(FtN1, keep.rownames = TRUE)
+wrdFreq <- mutate(wrdFreq, cum = cumsum(Frequency))
+
+pwf <- ggplot(wrdFreq, aes(rn, cum)) + geom_point()
+pwf
