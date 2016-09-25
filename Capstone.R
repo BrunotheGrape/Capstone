@@ -234,7 +234,7 @@ Pn1 <- Pn1 + geom_bar(stat="identity", fill="bisque") + ggtitle("15 Most Common 
 Pn1 <- Pn1 + theme(axis.text.x=element_text(angle=45, hjust=1))
 Pn1
 
-library("textcat"); library(dplyr)
+library("textcat"); library(dplyr); library(scales)
 
 Lang <- as.data.frame(textcat(dfnws, p = ECIMCI_profiles))
 colnames(Lang) <- c("language")
@@ -243,6 +243,10 @@ lancnt <- arrange(lancnt, desc(n))
 
 wrdFreq <- setDT(FtN1, keep.rownames = TRUE)
 wrdFreq <- mutate(wrdFreq, cum = cumsum(Frequency))
+wrdFreq$cum <- as.numeric(wrdFreq$cum)
+wrdFreq$rn <- as.numeric(wrdFreq$rn)
+wrdFreqN <- wrdFreq[seq(1, NROW(wrdFreq), by = 100), ]
 
-pwf <- ggplot(wrdFreq, aes(rn, cum)) + geom_point()
+pwf <- ggplot(wrdFreqN, aes(rn, cum)) + geom_point() + scale_y_continuous(labels = comma)
+pwf <- pwf + theme(axis.text.x = element_text(angle=45))
 pwf
