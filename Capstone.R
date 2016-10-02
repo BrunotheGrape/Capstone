@@ -170,13 +170,16 @@ tfblg3g <- setDT(tfblg3g, keep.rownames = TRUE)
 colnames(tfblg3g) <- c("3gram", "cnt")
 
 
-library("quanteda"); library(data.table); library(ggplot2)
-library(dplyr); library(qdap); library(RColorBrewer)
+library(quanteda); library(data.table); library(ggplot2)
+library(dplyr); library(stringr); library(RColorBrewer)
+library(tm); library(stringi)
 
 set.seed(1234)
 docsblg <- readLines( "final/en_US/en_US.blogs.txt")
 docsnws <- readLines( "final/en_US/en_US.news.txt")
 docstwt <- readLines( "final/en_US/en_US.twitter.txt")
+
+BWL <- as.character(read.csv("ProfanityList.csv", header = FALSE))
 
 dfblg <- as.data.frame(docsblg)
 dfblg <- dfblg[sample(nrow(dfblg), 5000),]
@@ -187,6 +190,7 @@ dfnws <-gsub("[^[:alpha:][:space:]']", " ", dfnws)
 dftwt <- as.data.frame(docstwt)
 dftwt <- dftwt[sample(nrow(dftwt), 5000),]
 dftwt <-gsub("[^[:alpha:][:space:]']", " ", dftwt)
+dftwt <- gsub(dftwt, patter = paste(BWL, collapse = "|"), replacement = "")
 
 dfb <- as.data.frame(dfblg)
 dfn <- as.data.frame(dfnws)
@@ -196,16 +200,22 @@ colnames(dfb) <- "txt"; colnames(dfn) <- "txt"; colnames(dft) <- "txt"
 
 dfz <- rbind(dfb, dfn)
 dfz <- rbind(dfz,dft)
-
 dfz <- as.character(dfz$txt)
 dfzC <- corpus(dfz)
+
 DfN2 <- dfm(dfz, ngrams = 2, verbose = TRUE, concatenator = " ", stopwords=TRUE)
+DfN2 <- removeFeatures(DfN2, BWL)
 MatN2 <- as.data.frame(as.matrix(docfreq(DfN2)))
 #MatN2 <- sort(rowSums(DfN2.mat), decreasing=TRUE)
 
 
 FtN2 <- setDT(MatN2, keep.rownames = TRUE)
 colnames(FtN2) <- c("Bigram", "Frequency")
+Split1 <- t(as.data.frame(strsplit(FtN2$Bigram, " ", fixed = TRUE)))
+colnames(Split1) <- c("txt1", "txt2")
+rownames(Split1) <- 1:nrow(Split1)
+FtN2 <- cbind(FtN2, Split1)
+
 FtN2 <- arrange(FtN2, desc(Frequency))
 Pn2 <- ggplot(FtN2[1:15, ], aes(Bigram, Frequency))
 Pn2 <- Pn2 + geom_bar(stat="identity", fill="cyan") + ggtitle("15 Most Common Bigrams")
@@ -250,3 +260,9 @@ wrdFreqN <- wrdFreq[seq(1, NROW(wrdFreq), by = 100), ]
 pwf <- ggplot(wrdFreqN, aes(rn, cum)) + geom_point() + scale_y_continuous(labels = comma)
 pwf <- pwf + theme(axis.text.x = element_text(angle=45))
 pwf
+
+Mx <- max(wrdFreq$cum)
+Mx5 <- Mx * .5
+Med <- filter(wrdFreq, cum < Mx5)
+Mx9 <- Mx * .9
+Nty <- filter(wrdFreq, cum < Mx9)
