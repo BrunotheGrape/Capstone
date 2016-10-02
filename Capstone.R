@@ -223,7 +223,15 @@ Pn2 <- Pn2 + theme(axis.text.x=element_text(angle=45, hjust=1))
 Pn2
 
 DfN3 <- dfm(dfz, ngrams = 3, verbose = TRUE, concatenator = " ", stopwords=TRUE)
+DfN3 <- removeFeatures(DfN3, BWL)
 MatN3 <- as.data.frame(as.matrix(docfreq(DfN3)))
+
+FtN3 <- setDT(MatN3, keep.rownames = TRUE)
+colnames(FtN3) <- c("Trigram", "Frequency")
+Split3 <- t(as.data.frame(strsplit(FtN3$Trigram, " ", fixed = TRUE)))
+colnames(Split3) <- c("txt1", "txt2", "txt3")
+rownames(Split3) <- 1:nrow(Split3)
+FtN3 <- cbind(FtN3, Split3)
 
 FtN3 <- setDT(MatN3, keep.rownames = TRUE)
 colnames(FtN3) <- c("Trigram", "Frequency")
