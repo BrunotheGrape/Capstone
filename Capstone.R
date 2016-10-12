@@ -179,32 +179,49 @@ docsblg <- readLines( "final/en_US/en_US.blogs.txt")
 docsnws <- readLines( "final/en_US/en_US.news.txt")
 docstwt <- readLines( "final/en_US/en_US.twitter.txt")
 
-BWL <- as.character(read.csv("ProfanityList.csv", header = FALSE))
+BWL <- as.data.frame(read.csv("ProfanityList.csv", header = FALSE))
+BWL <- as.character(BWL$V1)
+BWL <- as.vector(BWL)
+
+pattern <- paste0("\\b(?:", paste(BWL, collapse = "|"), ")\\b ?")
 
 dfblg <- as.data.frame(docsblg)
 dfblg <- dfblg[sample(nrow(dfblg), 5000),]
 dfblg <-gsub("[^[:alpha:][:space:]']", " ", dfblg)
+dfblg <- gsub("'", "", dfblg)
+#dfblg <- as.data.frame(lapply(dfblg,gsub,pattern=pattern,replacement="",dfblg,perl = TRUE))
 dfnws <- as.data.frame(docsnws)
 dfnws <- dfnws[sample(nrow(dfnws), 5000),]
 dfnws <-gsub("[^[:alpha:][:space:]']", " ", dfnws)
+dfnws <- gsub("'", "", dfnws)
+#dfnws <- as.data.frame(lapply(dfnws,gsub,pattern=pattern,replacement="",dfnws,perl = TRUE))
 dftwt <- as.data.frame(docstwt)
 dftwt <- dftwt[sample(nrow(dftwt), 5000),]
 dftwt <-gsub("[^[:alpha:][:space:]']", " ", dftwt)
-dftwt <- gsub(dftwt, patter = paste(BWL, collapse = "|"), replacement = "")
+dftwt <- gsub("'", "", dftwt)
+#dftwt <- as.data.frame(lapply(dftwt,gsub,pattern=pattern,replacement="",dftwt,perl = TRUE))
 
+#dfblg <- t(dfblg)
 dfb <- as.data.frame(dfblg)
+#dfnnws <- t(dfnws)
 dfn <- as.data.frame(dfnws)
+#dftwt <- t(dftwt)
 dft <- as.data.frame(dftwt)
+
 
 colnames(dfb) <- "txt"; colnames(dfn) <- "txt"; colnames(dft) <- "txt"
 
 dfz <- rbind(dfb, dfn)
 dfz <- rbind(dfz,dft)
 dfz <- as.character(dfz$txt)
-dfzC <- corpus(dfz)
+#pattern <- paste0("\\b(?:", paste(BWL, collapse = "|"), ")\\b ?")
+#dfz <- as.data.frame(lapply(dfz,gsub,pattern=pattern,replacement="",dfz,perl = TRUE))
+#dfz <- as.character(dfz)
+#dfzC <- corpus(dfz)
 
 DfN2 <- dfm(dfz, ngrams = 2, verbose = TRUE, concatenator = " ", stopwords=TRUE)
-DfN2 <- removeFeatures(DfN2, BWL)
+#DfN2 <- selectFeatures(DfN2, BWL, selection = c("keep", "remove"))
+#DfN2 <- as.data.frame(lapply(DfN2,gsub,pattern=pattern,replacement="",DfN2,perl = TRUE))
 MatN2 <- as.data.frame(as.matrix(docfreq(DfN2)))
 #MatN2 <- sort(rowSums(DfN2.mat), decreasing=TRUE)
 
@@ -228,14 +245,16 @@ MatN3 <- as.data.frame(as.matrix(docfreq(DfN3)))
 
 FtN3 <- setDT(MatN3, keep.rownames = TRUE)
 colnames(FtN3) <- c("Trigram", "Frequency")
+FtN3 <- arrange(FtN3, desc(Frequency))
 Split3 <- t(as.data.frame(strsplit(FtN3$Trigram, " ", fixed = TRUE)))
 colnames(Split3) <- c("txt1", "txt2", "txt3")
 rownames(Split3) <- 1:nrow(Split3)
 FtN3 <- cbind(FtN3, Split3)
+FtN3$PRED <- paste(FtN3$txt1, FtN3$txt2, sep = " ")
 
-FtN3 <- setDT(MatN3, keep.rownames = TRUE)
-colnames(FtN3) <- c("Trigram", "Frequency")
-FtN3 <- arrange(FtN3, desc(Frequency))
+#FtN3 <- setDT(MatN3, keep.rownames = TRUE)
+#colnames(FtN3) <- c("Trigram", "Frequency")
+#FtN3 <- arrange(FtN3, desc(Frequency))
 Pn3 <- ggplot(FtN3[1:15, ], aes(Trigram, Frequency))
 Pn3 <- Pn3 + geom_bar(stat="identity", fill="violetred") + ggtitle("15 Most Common Trigrams")
 Pn3 <- Pn3 + theme(axis.text.x=element_text(angle=45, hjust=1))
@@ -251,6 +270,28 @@ Pn1 <- ggplot(FtN1[1:15, ], aes(Word, Frequency))
 Pn1 <- Pn1 + geom_bar(stat="identity", fill="bisque") + ggtitle("15 Most Common Words")
 Pn1 <- Pn1 + theme(axis.text.x=element_text(angle=45, hjust=1))
 Pn1
+
+
+p <- c("one of")
+PredN3 <- filter(FtN3, PRED == p)
+
+Ps <- t(as.data.frame(strsplit(p, " ", fixed = TRUE)))
+
+Ps = as.data.frame(p)
+Ps <- strsplit(p)
+Psl <- as.list(Ps)
+
+PredN2 <- filter(FtN2, txt1 == Ps[2])
+
+PredDf <- select(PredN3, Frequency, txt3)
+PredDf <- rename(PredDf, PredWrd = txt3)
+
+PredN2 <- select(PredN2, Frequency, txt2)
+PredN2 <- rename(PredN2, PredWrd = txt2)
+
+PredDf <- rbind(PredDf, PredN2)
+PredDf <- arrange(PredDf, desc(Frequency))
+PredDf <- distinct(PredDf)
 
 library("textcat"); library(dplyr); library(scales)
 
@@ -274,3 +315,13 @@ Mx5 <- Mx * .5
 Med <- filter(wrdFreq, cum < Mx5)
 Mx9 <- Mx * .9
 Nty <- filter(wrdFreq, cum < Mx9)
+
+#wordsForRemoving <- c("This", "The", "Some","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","PT","At","Approximately","There","Multiple","Due","Up","A","As","On","All","When","January","February","March","April","May","June","July","August","September","October","November","December","Additionally","Unfortunately","Several","In","After","However","To","It","Impact","No","Once","Completed","These","Additional","An","Issues","Your","During","Based","Errors","Oct","Only","Reason","While","For","Following","Because","End","If","Other","Starting","Although","From","Also","Both","Since","Subsequently","Subsequent","That","Those")
+
+#pattern <- paste0("\\b(?:", paste(wordsForRemoving, collapse = "|"), ")\\b ?")
+
+#data6 <- as.data.frame(lapply(data4,gsub,pattern=pattern,replacement="",data4,perl = TRUE))
+
+
+
+
