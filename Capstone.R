@@ -313,32 +313,61 @@ p2 <- select(p2, -V1)
 p2[] <- lapply(p2, as.character)
 p2$p <- paste(p2, sep = ' ', collapse = ' ')
 
+p5 <- p5$p
+p4 <- p4$p
+p3 <- p3$p
+p2 <- p2$p
+
 PredN6 <- filter(FtN6, PRED == p)
 PredN6 <- mutate(PredN6, WtFreq = Frequency/sum(PredN6$Frequency))
 
-PredN5 <- 
+PredN5 <- filter(FtN5, PRED == p)
+Pred1N5 <- filter(FtN5, PRED == p5)
+PredN5 <- rbind(PredN5, Pred1N5)
+PredN5 <- mutate(PredN5, WtFreq = Frequency/sum(PredN5$Frequency))
 
-Ps <- t(as.data.frame(strsplit(p, " ", fixed = TRUE)))
+PredN4 <- filter(FtN4, PRED == p)
+Pred1N4 <- filter(FtN4, PRED == p5)
+Pred2N4 <- filter(FtN4, PRED == p4)
+PredN4 <- rbind(PredN4, Pred1N4, Pred2N4)
+PredN4 <- mutate(PredN4, WtFreq = Frequency/sum(PredN4$Frequency))
 
-Psl <- as.list(Ps)
+PredN3 <- filter(FtN3, PRED == p)
+Pred1N3 <- filter(FtN3, PRED == p5)
+Pred2N3 <- filter(FtN3, PRED == p4)
+Pred3N3 <- filter(FtN3, PRED == p3)
+PredN3 <- rbind(PredN3, Pred1N3, Pred2N3, Pred3N3)
+PredN3 <- mutate(PredN3, WtFreq = Frequency/sum(PredN3$Frequency))
 
-PredN2 <- filter(FtN2, txt1 == Ps[2])
+PredN2 <- filter(FtN2, PRED == p)
+Pred1N2 <- filter(FtN2, PRED == p5)
+Pred2N2 <- filter(FtN2, PRED == p4)
+Pred3N2 <- filter(FtN2, PRED == p3)
+Pred4N2 <- filter(FtN2, PRED == p2)
+PredN2 <- rbind(PredN2, Pred1N2, Pred2N2, Pred3N2, Pred4N2)
 PredN2 <- mutate(PredN2, WtFreq = Frequency/sum(PredN2$Frequency))
 
-PredDf <- select(PredN3, WtFreq, txt3)
-PredDf <- rename(PredDf, PredWrd = txt3)
+#Ps <- t(as.data.frame(strsplit(p, " ", fixed = TRUE)))
 
-PredN2 <- select(PredN2, WtFreq, txt2)
-PredN2 <- rename(PredN2, PredWrd = txt2)
+#Psl <- as.list(Ps)
 
-PredDf <- rbind(PredDf, PredN2)
-PredDf <- arrange(PredDf, desc(WtFreq))
-PredWrd <- as.data.frame(PredDf$PredWrd)
-PredWrd1 <- as.data.frame(FtN1$Word)
-colnames(PredWrd1) <- c("PredWrd")
-colnames(PredWrd) <- c("PredWrd")
-#PredWrd <- rbind(PredWrd, PredWrd1)
-PredWrd <- distinct(PredWrd)
+# PredN2 <- filter(FtN2, txt1 == Ps[2])
+# PredN2 <- mutate(PredN2, WtFreq = Frequency/sum(PredN2$Frequency))
+# 
+# PredDf <- select(PredN3, WtFreq, txt3)
+# PredDf <- rename(PredDf, PredWrd = txt3)
+# 
+# PredN2 <- select(PredN2, WtFreq, txt2)
+# PredN2 <- rename(PredN2, PredWrd = txt2)
+# 
+# PredDf <- rbind(PredDf, PredN2)
+# PredDf <- arrange(PredDf, desc(WtFreq))
+# PredWrd <- as.data.frame(PredDf$PredWrd)
+# PredWrd1 <- as.data.frame(FtN1$Word)
+# colnames(PredWrd1) <- c("PredWrd")
+# colnames(PredWrd) <- c("PredWrd")
+# #PredWrd <- rbind(PredWrd, PredWrd1)
+# PredWrd <- distinct(PredWrd)
 
 
 Pn2 <- ggplot(FtN2[1:15, ], aes(Bigram, Frequency))
