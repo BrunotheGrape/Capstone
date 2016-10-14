@@ -213,20 +213,69 @@ dfz <- rbind(dfb, dfn)
 dfz <- rbind(dfz,dft)
 dfz <- as.character(dfz$txt)
 
+DfN6 <- dfm(dfz, ngrams = 6, verbose = TRUE, concatenator = " ", stopwords=TRUE)
+MatN6 <- as.data.frame(as.matrix(docfreq(DfN6)))
+
+FtN6 <- setDT(MatN6, keep.rownames = TRUE)
+colnames(FtN6) <- c("Hexegram", "Frequency")
+FtN6 <- arrange(FtN6, desc(Frequency))
+Split6 <- t(as.data.frame(strsplit(FtN6$Hexegram, " ", fixed = TRUE)))
+colnames(Split6) <- c("txt1", "txt2", "txt3", "txt4", "txt5", "txt6")
+rownames(Split6) <- 1:nrow(Split6)
+FtN6 <- cbind(FtN6, Split6)
+FtN6$PRED <- paste(FtN6$txt1, FtN6$txt2, FtN6$txt3, FtN6$txt4, FtN6$txt5, sep = " ")
+
+DfN5 <- dfm(dfz, ngrams = 5, verbose = TRUE, concatenator = " ", stopwords=TRUE)
+MatN5 <- as.data.frame(as.matrix(docfreq(DfN5)))
+
+FtN5 <- setDT(MatN5, keep.rownames = TRUE)
+colnames(FtN5) <- c("Pentegram", "Frequency")
+FtN5 <- arrange(FtN5, desc(Frequency))
+Split5 <- t(as.data.frame(strsplit(FtN5$Pentegram, " ", fixed = TRUE)))
+colnames(Split5) <- c("txt1", "txt2", "txt3", "txt4", "txt5")
+rownames(Split5) <- 1:nrow(Split5)
+FtN5 <- cbind(FtN5, Split5)
+FtN5$PRED <- paste(FtN5$txt1, FtN5$txt2, FtN5$txt3, FtN5$txt4, sep = " ")
+
+DfN4 <- dfm(dfz, ngrams = 4, verbose = TRUE, concatenator = " ", stopwords=TRUE)
+MatN4 <- as.data.frame(as.matrix(docfreq(DfN4)))
+
+FtN4 <- setDT(MatN4, keep.rownames = TRUE)
+colnames(FtN4) <- c("Tetragram", "Frequency")
+FtN4 <- arrange(FtN4, desc(Frequency))
+Split4 <- t(as.data.frame(strsplit(FtN4$Tetragram, " ", fixed = TRUE)))
+colnames(Split4) <- c("txt1", "txt2", "txt3", "txt4")
+rownames(Split4) <- 1:nrow(Split4)
+FtN4 <- cbind(FtN4, Split4)
+FtN4$PRED <- paste(FtN4$txt1, FtN4$txt2, FtN4$txt3, sep = " ")
+
+DfN3 <- dfm(dfz, ngrams = 3, verbose = TRUE, concatenator = " ", stopwords=TRUE)
+MatN3 <- as.data.frame(as.matrix(docfreq(DfN3)))
+
+FtN3 <- setDT(MatN3, keep.rownames = TRUE)
+colnames(FtN3) <- c("Trigram", "Frequency")
+FtN3 <- arrange(FtN3, desc(Frequency))
+Split3 <- t(as.data.frame(strsplit(FtN3$Trigram, " ", fixed = TRUE)))
+colnames(Split3) <- c("txt1", "txt2", "txt3")
+rownames(Split3) <- 1:nrow(Split3)
+FtN3 <- cbind(FtN3, Split3)
+FtN3$PRED <- paste(FtN3$txt1, FtN3$txt2, sep = " ")
+
+
 
 DfN2 <- dfm(dfz, ngrams = 2, verbose = TRUE, concatenator = " ", stopwords=TRUE)
 MatN2 <- as.data.frame(as.matrix(docfreq(DfN2)))
 #MatN2 <- sort(rowSums(DfN2.mat), decreasing=TRUE)
 
-
 FtN2 <- setDT(MatN2, keep.rownames = TRUE)
 colnames(FtN2) <- c("Bigram", "Frequency")
-Split1 <- t(as.data.frame(strsplit(FtN2$Bigram, " ", fixed = TRUE)))
-colnames(Split1) <- c("txt1", "txt2")
-rownames(Split1) <- 1:nrow(Split1)
-FtN2 <- cbind(FtN2, Split1)
-
 FtN2 <- arrange(FtN2, desc(Frequency))
+Split2 <- t(as.data.frame(strsplit(FtN2$Bigram, " ", fixed = TRUE)))
+colnames(Split2) <- c("txt1", "txt2")
+rownames(Split2) <- 1:nrow(Split2)
+FtN2 <- cbind(FtN2, Split2)
+FtN2$PRED <- FtN2$txt1
+
 Pn2 <- ggplot(FtN2[1:15, ], aes(Bigram, Frequency))
 Pn2 <- Pn2 + geom_bar(stat="identity", fill="cyan") + ggtitle("15 Most Common Bigrams")
 Pn2 <- Pn2 + theme(axis.text.x=element_text(angle=45, hjust=1))
@@ -252,6 +301,8 @@ Pn3 <- Pn3 + geom_bar(stat="identity", fill="violetred") + ggtitle("15 Most Comm
 Pn3 <- Pn3 + theme(axis.text.x=element_text(angle=45, hjust=1))
 Pn3
 
+
+
 DfN1 <- dfm(dfz, ngrams = 1, verbose = TRUE, concatenator = " ", stopwords=TRUE)
 MatN1 <- as.data.frame(as.matrix(docfreq(DfN1)))
 
@@ -264,7 +315,7 @@ Pn1 <- Pn1 + theme(axis.text.x=element_text(angle=45, hjust=1))
 Pn1
 
 
-p <- c("one of")
+p <- c("quite some")
 PredN3 <- filter(FtN3, PRED == p)
 PredN3 <- mutate(PredN3, WtFreq = Frequency/sum(PredN3$Frequency))
 
@@ -287,7 +338,7 @@ PredWrd <- as.data.frame(PredDf$PredWrd)
 PredWrd1 <- as.data.frame(FtN1$Word)
 colnames(PredWrd1) <- c("PredWrd")
 colnames(PredWrd) <- c("PredWrd")
-PredWrd <- rbind(PredWrd, PredWrd1)
+#PredWrd <- rbind(PredWrd, PredWrd1)
 PredWrd <- distinct(PredWrd)
 
 
@@ -314,11 +365,6 @@ Med <- filter(wrdFreq, cum < Mx5)
 Mx9 <- Mx * .9
 Nty <- filter(wrdFreq, cum < Mx9)
 
-#wordsForRemoving <- c("This", "The", "Some","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","PT","At","Approximately","There","Multiple","Due","Up","A","As","On","All","When","January","February","March","April","May","June","July","August","September","October","November","December","Additionally","Unfortunately","Several","In","After","However","To","It","Impact","No","Once","Completed","These","Additional","An","Issues","Your","During","Based","Errors","Oct","Only","Reason","While","For","Following","Because","End","If","Other","Starting","Although","From","Also","Both","Since","Subsequently","Subsequent","That","Those")
-
-#pattern <- paste0("\\b(?:", paste(wordsForRemoving, collapse = "|"), ")\\b ?")
-
-#data6 <- as.data.frame(lapply(data4,gsub,pattern=pattern,replacement="",data4,perl = TRUE))
 
 
 
