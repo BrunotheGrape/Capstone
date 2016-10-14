@@ -266,24 +266,30 @@ Pn1
 
 p <- c("one of")
 PredN3 <- filter(FtN3, PRED == p)
+PredN3 <- mutate(PredN3, WtFreq = Frequency/sum(PredN3$Frequency))
 
 Ps <- t(as.data.frame(strsplit(p, " ", fixed = TRUE)))
 
-Ps = as.data.frame(p)
-Ps <- strsplit(p)
 Psl <- as.list(Ps)
 
 PredN2 <- filter(FtN2, txt1 == Ps[2])
+PredN2 <- mutate(PredN2, WtFreq = Frequency/sum(PredN2$Frequency))
 
-PredDf <- select(PredN3, Frequency, txt3)
+PredDf <- select(PredN3, WtFreq, txt3)
 PredDf <- rename(PredDf, PredWrd = txt3)
 
-PredN2 <- select(PredN2, Frequency, txt2)
+PredN2 <- select(PredN2, WtFreq, txt2)
 PredN2 <- rename(PredN2, PredWrd = txt2)
 
 PredDf <- rbind(PredDf, PredN2)
-PredDf <- arrange(PredDf, desc(Frequency))
-PredDf <- distinct(PredDf)
+PredDf <- arrange(PredDf, desc(WtFreq))
+PredWrd <- as.data.frame(PredDf$PredWrd)
+PredWrd1 <- as.data.frame(FtN1$Word)
+colnames(PredWrd1) <- c("PredWrd")
+colnames(PredWrd) <- c("PredWrd")
+PredWrd <- rbind(PredWrd, PredWrd1)
+PredWrd <- distinct(PredWrd)
+
 
 library("textcat"); library(dplyr); library(scales)
 
