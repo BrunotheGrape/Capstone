@@ -189,23 +189,21 @@ dfblg <- as.data.frame(docsblg)
 dfblg <- dfblg[sample(nrow(dfblg), 5000),]
 dfblg <-gsub("[^[:alpha:][:space:]']", " ", dfblg)
 dfblg <- gsub("'", "", dfblg)
-#dfblg <- as.data.frame(lapply(dfblg,gsub,pattern=pattern,replacement="",dfblg,perl = TRUE))
+dfblg <- gsub(x = dfblg, pattern = paste(BWL, collapse = "|"), replacement = "")
 dfnws <- as.data.frame(docsnws)
 dfnws <- dfnws[sample(nrow(dfnws), 5000),]
 dfnws <-gsub("[^[:alpha:][:space:]']", " ", dfnws)
 dfnws <- gsub("'", "", dfnws)
-#dfnws <- as.data.frame(lapply(dfnws,gsub,pattern=pattern,replacement="",dfnws,perl = TRUE))
+dfnws <- gsub(x = dfnws, pattern = paste(BWL, collapse = "|"), replacement = "")
 dftwt <- as.data.frame(docstwt)
 dftwt <- dftwt[sample(nrow(dftwt), 5000),]
 dftwt <-gsub("[^[:alpha:][:space:]']", " ", dftwt)
 dftwt <- gsub("'", "", dftwt)
-#dftwt <- as.data.frame(lapply(dftwt,gsub,pattern=pattern,replacement="",dftwt,perl = TRUE))
+dftwt <- gsub(x = dftwt, pattern = paste(BWL, collapse = "|"), replacement = "")
 
-#dfblg <- t(dfblg)
+
 dfb <- as.data.frame(dfblg)
-#dfnnws <- t(dfnws)
 dfn <- as.data.frame(dfnws)
-#dftwt <- t(dftwt)
 dft <- as.data.frame(dftwt)
 
 
@@ -214,14 +212,9 @@ colnames(dfb) <- "txt"; colnames(dfn) <- "txt"; colnames(dft) <- "txt"
 dfz <- rbind(dfb, dfn)
 dfz <- rbind(dfz,dft)
 dfz <- as.character(dfz$txt)
-#pattern <- paste0("\\b(?:", paste(BWL, collapse = "|"), ")\\b ?")
-#dfz <- as.data.frame(lapply(dfz,gsub,pattern=pattern,replacement="",dfz,perl = TRUE))
-#dfz <- as.character(dfz)
-#dfzC <- corpus(dfz)
+
 
 DfN2 <- dfm(dfz, ngrams = 2, verbose = TRUE, concatenator = " ", stopwords=TRUE)
-#DfN2 <- selectFeatures(DfN2, BWL, selection = c("keep", "remove"))
-#DfN2 <- as.data.frame(lapply(DfN2,gsub,pattern=pattern,replacement="",DfN2,perl = TRUE))
 MatN2 <- as.data.frame(as.matrix(docfreq(DfN2)))
 #MatN2 <- sort(rowSums(DfN2.mat), decreasing=TRUE)
 
@@ -240,7 +233,6 @@ Pn2 <- Pn2 + theme(axis.text.x=element_text(angle=45, hjust=1))
 Pn2
 
 DfN3 <- dfm(dfz, ngrams = 3, verbose = TRUE, concatenator = " ", stopwords=TRUE)
-DfN3 <- removeFeatures(DfN3, BWL)
 MatN3 <- as.data.frame(as.matrix(docfreq(DfN3)))
 
 FtN3 <- setDT(MatN3, keep.rownames = TRUE)
