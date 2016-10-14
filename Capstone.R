@@ -183,23 +183,23 @@ BWL <- as.data.frame(read.csv("ProfanityList.csv", header = FALSE))
 BWL <- as.character(BWL$V1)
 BWL <- as.vector(BWL)
 
-pattern <- paste0("\\b(?:", paste(BWL, collapse = "|"), ")\\b ?")
+#pattern <- paste0("\\b(?:", paste(BWL, collapse = "|"), ")\\b ?")
 
 dfblg <- as.data.frame(docsblg)
 dfblg <- dfblg[sample(nrow(dfblg), 5000),]
+dfblg <- gsub(x = dfblg, pattern = paste(BWL, collapse = "|"), replacement = "")
 dfblg <-gsub("[^[:alpha:][:space:]']", " ", dfblg)
 dfblg <- gsub("'", "", dfblg)
-dfblg <- gsub(x = dfblg, pattern = paste(BWL, collapse = "|"), replacement = "")
 dfnws <- as.data.frame(docsnws)
 dfnws <- dfnws[sample(nrow(dfnws), 5000),]
+dfnws <- gsub(x = dfnws, pattern = paste(BWL, collapse = "|"), replacement = "")
 dfnws <-gsub("[^[:alpha:][:space:]']", " ", dfnws)
 dfnws <- gsub("'", "", dfnws)
-dfnws <- gsub(x = dfnws, pattern = paste(BWL, collapse = "|"), replacement = "")
 dftwt <- as.data.frame(docstwt)
 dftwt <- dftwt[sample(nrow(dftwt), 5000),]
+dftwt <- gsub(x = dftwt, pattern = paste(BWL, collapse = "|"), replacement = "")
 dftwt <-gsub("[^[:alpha:][:space:]']", " ", dftwt)
 dftwt <- gsub("'", "", dftwt)
-dftwt <- gsub(x = dftwt, pattern = paste(BWL, collapse = "|"), replacement = "")
 
 
 dfb <- as.data.frame(dfblg)
@@ -276,6 +276,71 @@ rownames(Split2) <- 1:nrow(Split2)
 FtN2 <- cbind(FtN2, Split2)
 FtN2$PRED <- FtN2$txt1
 
+DfN1 <- dfm(dfz, ngrams = 1, verbose = TRUE, concatenator = " ", stopwords=TRUE)
+MatN1 <- as.data.frame(as.matrix(docfreq(DfN1)))
+
+FtN1 <- setDT(MatN1, keep.rownames = TRUE)
+colnames(FtN1) <- c("Monogram", "Frequency")
+FtN1 <- arrange(FtN1, desc(Frequency))
+FtN1$PRED <- FtN1$Monogram
+
+p <- c("at the end of the")
+p <- gsub(x = p, pattern = paste(BWL, collapse = "|"), replacement = "")
+p <-gsub("[^[:alpha:][:space:]']", " ", p)
+p <- gsub("'", "", p)
+
+p5 <- t(as.data.frame(strsplit(p, " ", fixed = TRUE)))
+p5 <- as.data.frame(p5)
+p5 <- select(p5, -V1)
+p5[] <- lapply(p5, as.character)
+p5$p <- paste(p5, sep = " ", collapse = ' ')
+
+p4 <- t(as.data.frame(strsplit(p5$p, " ", fixed = TRUE)))
+p4 <- as.data.frame(p4)
+p4 <- select(p4, -V1)
+p4[] <- lapply(p4, as.character)
+p4$p <- paste(p4, sep = ' ', collapse = ' ')
+
+p3 <- t(as.data.frame(strsplit(p4$p, " ", fixed = TRUE)))
+p3 <- as.data.frame(p3)
+p3 <- select(p3, -V1)
+p3[] <- lapply(p3, as.character)
+p3$p <- paste(p3, sep = ' ', collapse = ' ')
+
+p2 <- t(as.data.frame(strsplit(p3$p, " ", fixed = TRUE)))
+p2 <- as.data.frame(p2)
+p2 <- select(p2, -V1)
+p2[] <- lapply(p2, as.character)
+p2$p <- paste(p2, sep = ' ', collapse = ' ')
+
+PredN6 <- filter(FtN6, PRED == p)
+PredN6 <- mutate(PredN6, WtFreq = Frequency/sum(PredN6$Frequency))
+
+PredN5 <- 
+
+Ps <- t(as.data.frame(strsplit(p, " ", fixed = TRUE)))
+
+Psl <- as.list(Ps)
+
+PredN2 <- filter(FtN2, txt1 == Ps[2])
+PredN2 <- mutate(PredN2, WtFreq = Frequency/sum(PredN2$Frequency))
+
+PredDf <- select(PredN3, WtFreq, txt3)
+PredDf <- rename(PredDf, PredWrd = txt3)
+
+PredN2 <- select(PredN2, WtFreq, txt2)
+PredN2 <- rename(PredN2, PredWrd = txt2)
+
+PredDf <- rbind(PredDf, PredN2)
+PredDf <- arrange(PredDf, desc(WtFreq))
+PredWrd <- as.data.frame(PredDf$PredWrd)
+PredWrd1 <- as.data.frame(FtN1$Word)
+colnames(PredWrd1) <- c("PredWrd")
+colnames(PredWrd) <- c("PredWrd")
+#PredWrd <- rbind(PredWrd, PredWrd1)
+PredWrd <- distinct(PredWrd)
+
+
 Pn2 <- ggplot(FtN2[1:15, ], aes(Bigram, Frequency))
 Pn2 <- Pn2 + geom_bar(stat="identity", fill="cyan") + ggtitle("15 Most Common Bigrams")
 Pn2 <- Pn2 + theme(axis.text.x=element_text(angle=45, hjust=1))
@@ -315,31 +380,7 @@ Pn1 <- Pn1 + theme(axis.text.x=element_text(angle=45, hjust=1))
 Pn1
 
 
-p <- c("quite some")
-PredN3 <- filter(FtN3, PRED == p)
-PredN3 <- mutate(PredN3, WtFreq = Frequency/sum(PredN3$Frequency))
 
-Ps <- t(as.data.frame(strsplit(p, " ", fixed = TRUE)))
-
-Psl <- as.list(Ps)
-
-PredN2 <- filter(FtN2, txt1 == Ps[2])
-PredN2 <- mutate(PredN2, WtFreq = Frequency/sum(PredN2$Frequency))
-
-PredDf <- select(PredN3, WtFreq, txt3)
-PredDf <- rename(PredDf, PredWrd = txt3)
-
-PredN2 <- select(PredN2, WtFreq, txt2)
-PredN2 <- rename(PredN2, PredWrd = txt2)
-
-PredDf <- rbind(PredDf, PredN2)
-PredDf <- arrange(PredDf, desc(WtFreq))
-PredWrd <- as.data.frame(PredDf$PredWrd)
-PredWrd1 <- as.data.frame(FtN1$Word)
-colnames(PredWrd1) <- c("PredWrd")
-colnames(PredWrd) <- c("PredWrd")
-#PredWrd <- rbind(PredWrd, PredWrd1)
-PredWrd <- distinct(PredWrd)
 
 
 library("textcat"); library(dplyr); library(scales)
