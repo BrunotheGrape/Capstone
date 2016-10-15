@@ -284,10 +284,12 @@ colnames(FtN1) <- c("Monogram", "Frequency")
 FtN1 <- arrange(FtN1, desc(Frequency))
 FtN1$PRED <- FtN1$Monogram
 
-p <- c("at the end of the")
+p <- c("now at the end of the")
 p <- gsub(x = p, pattern = paste(BWL, collapse = "|"), replacement = "")
 p <-gsub("[^[:alpha:][:space:]']", " ", p)
 p <- gsub("'", "", p)
+p <- tail(strsplit(p,split=" ")[[1]],5)
+p <- paste(p, sep = " ", collapse = " ")
 
 p5 <- t(as.data.frame(strsplit(p, " ", fixed = TRUE)))
 p5 <- as.data.frame(p5)
@@ -346,6 +348,29 @@ Pred3N2 <- filter(FtN2, PRED == p3)
 Pred4N2 <- filter(FtN2, PRED == p2)
 PredN2 <- rbind(PredN2, Pred1N2, Pred2N2, Pred3N2, Pred4N2)
 PredN2 <- mutate(PredN2, WtFreq = Frequency/sum(PredN2$Frequency))
+
+PredN6Wrd <- select(PredN6, txt6, WtFreq )
+colnames(PredN6Wrd) <- c("Wrd", "WtFreq")
+PredN5Wrd <- select(PredN5, txt5, WtFreq )
+colnames(PredN5Wrd) <- c("Wrd", "WtFreq")
+PredN4Wrd <- select(PredN4, txt4, WtFreq )
+colnames(PredN4Wrd) <- c("Wrd", "WtFreq")
+PredN3Wrd <- select(PredN3, txt3, WtFreq )
+colnames(PredN3Wrd) <- c("Wrd", "WtFreq")
+PredN2Wrd <- select(PredN2, txt2, WtFreq )
+colnames(PredN2Wrd) <- c("Wrd", "WtFreq")
+
+
+
+PredWrd <- rbind(PredN6Wrd,PredN5Wrd)
+PredWrd <- rbind(PredWrd, PredN4Wrd)
+PredWrd <- rbind(PredWrd, PredN3Wrd)
+PredWrd <- rbind(PredWrd, PredN2Wrd)
+
+PredWrd <- arrange(PredWrd, desc(WtFreq))
+Wrd <- PredWrd$Wrd
+Wrd <- as.data.frame(as.character(Wrd))
+Wrd <- distinct(Wrd)
 
 #Ps <- t(as.data.frame(strsplit(p, " ", fixed = TRUE)))
 
