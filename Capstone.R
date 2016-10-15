@@ -186,17 +186,17 @@ BWL <- as.vector(BWL)
 #pattern <- paste0("\\b(?:", paste(BWL, collapse = "|"), ")\\b ?")
 
 dfblg <- as.data.frame(docsblg)
-dfblg <- dfblg[sample(nrow(dfblg), 5000),]
+dfblg <- dfblg[sample(nrow(dfblg), 500000),]
 dfblg <- gsub(x = dfblg, pattern = paste(BWL, collapse = "|"), replacement = "")
 dfblg <-gsub("[^[:alpha:][:space:]']", " ", dfblg)
 dfblg <- gsub("'", "", dfblg)
 dfnws <- as.data.frame(docsnws)
-dfnws <- dfnws[sample(nrow(dfnws), 5000),]
+dfnws <- dfnws[sample(nrow(dfnws), 500000),]
 dfnws <- gsub(x = dfnws, pattern = paste(BWL, collapse = "|"), replacement = "")
 dfnws <-gsub("[^[:alpha:][:space:]']", " ", dfnws)
 dfnws <- gsub("'", "", dfnws)
 dftwt <- as.data.frame(docstwt)
-dftwt <- dftwt[sample(nrow(dftwt), 5000),]
+dftwt <- dftwt[sample(nrow(dftwt), 500000),]
 dftwt <- gsub(x = dftwt, pattern = paste(BWL, collapse = "|"), replacement = "")
 dftwt <-gsub("[^[:alpha:][:space:]']", " ", dftwt)
 dftwt <- gsub("'", "", dftwt)
@@ -369,30 +369,12 @@ PredWrd <- rbind(PredWrd, PredN2Wrd)
 
 PredWrd <- arrange(PredWrd, desc(WtFreq))
 Wrd <- PredWrd$Wrd
+Wrd1 <- as.data.framea(as.character(FtN1$PRED))
+colnames(Wrd1) <- c("Wrd")
 Wrd <- as.data.frame(as.character(Wrd))
+colnames(Wrd) <- c("Wrd")
+Wrd <- rbind(Wrd, Wrd1)
 Wrd <- distinct(Wrd)
-
-#Ps <- t(as.data.frame(strsplit(p, " ", fixed = TRUE)))
-
-#Psl <- as.list(Ps)
-
-# PredN2 <- filter(FtN2, txt1 == Ps[2])
-# PredN2 <- mutate(PredN2, WtFreq = Frequency/sum(PredN2$Frequency))
-# 
-# PredDf <- select(PredN3, WtFreq, txt3)
-# PredDf <- rename(PredDf, PredWrd = txt3)
-# 
-# PredN2 <- select(PredN2, WtFreq, txt2)
-# PredN2 <- rename(PredN2, PredWrd = txt2)
-# 
-# PredDf <- rbind(PredDf, PredN2)
-# PredDf <- arrange(PredDf, desc(WtFreq))
-# PredWrd <- as.data.frame(PredDf$PredWrd)
-# PredWrd1 <- as.data.frame(FtN1$Word)
-# colnames(PredWrd1) <- c("PredWrd")
-# colnames(PredWrd) <- c("PredWrd")
-# #PredWrd <- rbind(PredWrd, PredWrd1)
-# PredWrd <- distinct(PredWrd)
 
 
 Pn2 <- ggplot(FtN2[1:15, ], aes(Bigram, Frequency))
