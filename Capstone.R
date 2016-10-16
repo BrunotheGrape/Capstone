@@ -7,167 +7,167 @@
 # data <- read.table(unz(temp, "Coursera-SwiftKey.dat"))
 # unlink(temp)
 
-library(tm)
-data <- Corpus(readLines("https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip"))
+# library(tm)
+# data <- Corpus(readLines("https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip"))
+# 
+# 
+# docsblg <- readLines( "final/en_US/en_US.blogs.txt")
+# docsnws <- readLines( "final/en_US/en_US.news.txt")
+# docstwt <- readLines( "final/en_US/en_US.twitter.txt")
+# 
+# docsblg <- as.data.frame(docsblg)
+# docsblg$ccnt <- nchar(as.character(docsblg$docsblg))
+# 
+# docsnws <- as.data.frame(docsnws)
+# docsnws$ccnt <- nchar(as.character(docsnws$docsnws))
+# 
+# docstwt <- as.data.frame(docstwt)
+# docstwt$ccnt <- nchar(as.character(docstwt$docstwt))
+# 
+# docsblgC <- Corpus(VectorSource(docsblg$docsblg))
+# 
+# docsnwsC <- Corpus(VectorSource(docsnws$docsnws))
+# 
+# docstwtC <- Corpus(VectorSource(docstwt$docstwt))
+# 
+# dbc <- docsblgC
+# dbc <- tm_map(dbc, removePunctuation)
+# dbc <- tm_map(dbc, removeNumbers)
+# dbc <- tm_map(dbc, tolower)
+# dbc <- tm_map(dbc, removeWords, stopwords("english"))
+# dbc <- tm_map(dbc, stemDocument)
+# dbc <- tm_map(dbc, stripWhitespace)
+# dbc <- tm_map(dbc, PlainTextDocument)
+# #dbc <- as.data.frame(dbc)
+# 
+# #write(dbc, "dbc.txt")
+# 
+# tdmb <- TermDocumentMatrix(dbc)
+# ttb <- findFreqTerms(tdmb, lowfreq = 2000)
+# ttbdt <- as.data.frame(ttb)
+# rsb <- rowSums(as.matrix(tdmb[ttb,]))
+# 
+# 
+# dtc <- docstwtC
+# dtc <- tm_map(dtc, removePunctuation)
+# dtc <- tm_map(dtc, removeNumbers)
+# dtc <- tm_map(dtc, tolower)
+# dtc <- tm_map(dtc, removeWords, stopwords("english"))
+# dtc <- tm_map(dtc, stemDocument)
+# dtc <- tm_map(dtc, stripWhitespace)
+# dtcc <- dtc
+# dtc <- tm_map(dtc, PlainTextDocument)
+# 
+# tdmt <- TermDocumentMatrix(dtc)
+# ttt <- findFreqTerms(tdmt, lowfreq = 2000)
+# tttdt <- as.data.frame(ttt)
+# rst <- rowSums(as.matrix(tdmt[ttt,]))
+# 
+# 
+# 
+# dnc <- docsnwsC
+# dnc <- tm_map(dnc, removePunctuation)
+# dnc <- tm_map(dnc, removeNumbers)
+# dnc <- tm_map(dnc, tolower)
+# dnc <- tm_map(dnc, removeWords, stopwords("english"))
+# dnc <- tm_map(dnc, stemDocument)
+# dnc <- tm_map(dnc, stripWhitespace)
+# dnc <- tm_map(dnc, PlainTextDocument)
+# 
+# tdmn <- TermDocumentMatrix(dnc)
+# ttn <- findFreqTerms(tdmn, lowfreq = 2000)
+# ttndt <- as.data.frame(ttn)
+# rsn <- rowSums(as.matrix(tdmt[ttn,]))
+# 
+# 
+# 
+# Stg <- grep("hate", docstwt, value = TRUE)
+# stg <- as.data.frame(Stg)
 
 
-docsblg <- readLines( "final/en_US/en_US.blogs.txt")
-docsnws <- readLines( "final/en_US/en_US.news.txt")
-docstwt <- readLines( "final/en_US/en_US.twitter.txt")
-
-docsblg <- as.data.frame(docsblg)
-docsblg$ccnt <- nchar(as.character(docsblg$docsblg))
-
-docsnws <- as.data.frame(docsnws)
-docsnws$ccnt <- nchar(as.character(docsnws$docsnws))
-
-docstwt <- as.data.frame(docstwt)
-docstwt$ccnt <- nchar(as.character(docstwt$docstwt))
-
-docsblgC <- Corpus(VectorSource(docsblg$docsblg))
-
-docsnwsC <- Corpus(VectorSource(docsnws$docsnws))
-
-docstwtC <- Corpus(VectorSource(docstwt$docstwt))
-
-dbc <- docsblgC
-dbc <- tm_map(dbc, removePunctuation)
-dbc <- tm_map(dbc, removeNumbers)
-dbc <- tm_map(dbc, tolower)
-dbc <- tm_map(dbc, removeWords, stopwords("english"))
-dbc <- tm_map(dbc, stemDocument)
-dbc <- tm_map(dbc, stripWhitespace)
-dbc <- tm_map(dbc, PlainTextDocument)
-#dbc <- as.data.frame(dbc)
-
-#write(dbc, "dbc.txt")
-
-tdmb <- TermDocumentMatrix(dbc)
-ttb <- findFreqTerms(tdmb, lowfreq = 2000)
-ttbdt <- as.data.frame(ttb)
-rsb <- rowSums(as.matrix(tdmb[ttb,]))
-
-
-dtc <- docstwtC
-dtc <- tm_map(dtc, removePunctuation)
-dtc <- tm_map(dtc, removeNumbers)
-dtc <- tm_map(dtc, tolower)
-dtc <- tm_map(dtc, removeWords, stopwords("english"))
-dtc <- tm_map(dtc, stemDocument)
-dtc <- tm_map(dtc, stripWhitespace)
-dtcc <- dtc
-dtc <- tm_map(dtc, PlainTextDocument)
-
-tdmt <- TermDocumentMatrix(dtc)
-ttt <- findFreqTerms(tdmt, lowfreq = 2000)
-tttdt <- as.data.frame(ttt)
-rst <- rowSums(as.matrix(tdmt[ttt,]))
-
-
-
-dnc <- docsnwsC
-dnc <- tm_map(dnc, removePunctuation)
-dnc <- tm_map(dnc, removeNumbers)
-dnc <- tm_map(dnc, tolower)
-dnc <- tm_map(dnc, removeWords, stopwords("english"))
-dnc <- tm_map(dnc, stemDocument)
-dnc <- tm_map(dnc, stripWhitespace)
-dnc <- tm_map(dnc, PlainTextDocument)
-
-tdmn <- TermDocumentMatrix(dnc)
-ttn <- findFreqTerms(tdmn, lowfreq = 2000)
-ttndt <- as.data.frame(ttn)
-rsn <- rowSums(as.matrix(tdmt[ttn,]))
-
-
-
-Stg <- grep("hate", docstwt, value = TRUE)
-stg <- as.data.frame(Stg)
-
-
-
-library("quanteda"); library(data.table); library(ggplot2)
-library(dplyr)
-qdtwt <- textfile("final/en_US/en_US.twitter.txt")
-qdtwtC <- corpus(qdtwt)
-summary(qdtwtC)
-kwic(qdtwtC, "economic", valuetype = "regex")
-
-DfmTwt <- dfm(qdtwtC)
-summary(DfmTwt)
-StemDfmTwt <- dfm(qdtwtC, ignoredFeatures = stopwords("english"), stem = TRUE)
-tfTwt <- topfeatures(StemDfmTwt, 100)
-tfTwt <- setDT(tfTwt, keep.rownames = TRUE)
-colnames(tfTwt) <- c("word", "cnt")
-ptft <- ggplot(tfTwt, aes(word, cnt)) + geom_point()
-ptft
-
-
-tknTwt <- tokenize(qdtwtC, verbose = TRUE)
-summary(tknTwt)
-
-Twt2g <- features(dfm(qdtwtC, ngrams = 2, ignoredFeatures = stopwords("english")))
-Twt3g <- features(dfm(qdtwtC, ngrams = 3, ignoredFeatures = stopwords("english")))
-
-
-qdBlg <- textfile("final/en_US/en_US.blogs.txt")
-qdBlgC <- corpus(qdBlg)
-summary(qdBlgC)
-kwic(qdBlgC, "economic", valuetype = "regex")
-
-DfmBlg <- dfm(qdBlgC)
-summary(DfmBlg)
-StemDfmBlg <- dfm(qdBlgC, ignoredFeatures = stopwords("english"), stem = TRUE)
-tfBlg <- as.data.frame(topfeatures(StemDfmBlg, 100))
-tfBlg <- setDT(tfBlg, keep.rownames = TRUE)
-colnames(tfBlg) <- c("word", "cnt")
-ptfb <- ggplot(tfblg, aes(word, cnt)) + geom_point()
-ptfb
-
-tknBlg <- tokenize(qdBlgC, verbose = TRUE)
-
-
-blg2g <- features(dfm(qdBlgC, ngrams = 2, ignoredFeatures = stopwords("english")))
-blg3g <- features(dfm(qdBlgC, ngrams = 3, ignoredFeatures = stopwords("english")))
-
-set.seed(1234)
-docsblg <- readLines( "final/en_US/en_US.blogs.txt")
-docsblg <- as.data.frame(docsblg)
-dfblg <- docsblg[sample(nrow(docsblg), 50),]
-dfblg <- as.character(dfblg)
-qdBlgC <- corpus(dfblg)
-summary(qdBlgC)
-kwic(qdBlgC, "economic", valuetype = "regex")
-
-DfmBlg <- dfm(qdBlgC)
-summary(DfmBlg)
-StemDfmBlg <- dfm(qdBlgC, stem = TRUE)
-tfBlg <- as.data.frame(topfeatures(StemDfmBlg, 100))
-tfBlg <- setDT(tfBlg, keep.rownames = TRUE)
-colnames(tfBlg) <- c("word", "cnt")
-ptfb <- ggplot(tfBlg, aes(word, cnt)) + geom_point()
-ptfb
-
-tknBlg <- tokenize(qdBlgC, verbose = TRUE)
-
-blg2g <- features(dfm(qdBlgC, ngrams = 2, ignoredFeatures = stopwords("english")))
-blg3g <- features(dfm(qdBlgC, ngrams = 3, ignoredFeatures = stopwords("english")))
-
-blg2gC <- corpus(blg2g)
-summary(blg2g)
-
-dfBlg2g <- dfm(blg2gC)
-tfblg2g <- as.data.frame(topfeatures(dfBlg2g, 5000))
-tfblg2g <- setDT(tfblg2g, keep.rownames = TRUE)
-colnames(tfblg2g) <- c("2gram", "cnt")
-
-blg3gC <- corpus(blg3g)
-summary(blg3g)
-
-dfBlg3g <- dfm(blg3gC)
-tfblg3g <- as.data.frame(topfeatures(dfBlg3g, 5000))
-tfblg3g <- setDT(tfblg3g, keep.rownames = TRUE)
-colnames(tfblg3g) <- c("3gram", "cnt")
+# 
+# library("quanteda"); library(data.table); library(ggplot2)
+# library(dplyr)
+# qdtwt <- textfile("final/en_US/en_US.twitter.txt")
+# qdtwtC <- corpus(qdtwt)
+# summary(qdtwtC)
+# kwic(qdtwtC, "economic", valuetype = "regex")
+# 
+# DfmTwt <- dfm(qdtwtC)
+# summary(DfmTwt)
+# StemDfmTwt <- dfm(qdtwtC, ignoredFeatures = stopwords("english"), stem = TRUE)
+# tfTwt <- topfeatures(StemDfmTwt, 100)
+# tfTwt <- setDT(tfTwt, keep.rownames = TRUE)
+# colnames(tfTwt) <- c("word", "cnt")
+# ptft <- ggplot(tfTwt, aes(word, cnt)) + geom_point()
+# ptft
+# 
+# 
+# tknTwt <- tokenize(qdtwtC, verbose = TRUE)
+# summary(tknTwt)
+# 
+# Twt2g <- features(dfm(qdtwtC, ngrams = 2, ignoredFeatures = stopwords("english")))
+# Twt3g <- features(dfm(qdtwtC, ngrams = 3, ignoredFeatures = stopwords("english")))
+# 
+# 
+# qdBlg <- textfile("final/en_US/en_US.blogs.txt")
+# qdBlgC <- corpus(qdBlg)
+# summary(qdBlgC)
+# kwic(qdBlgC, "economic", valuetype = "regex")
+# 
+# DfmBlg <- dfm(qdBlgC)
+# summary(DfmBlg)
+# StemDfmBlg <- dfm(qdBlgC, ignoredFeatures = stopwords("english"), stem = TRUE)
+# tfBlg <- as.data.frame(topfeatures(StemDfmBlg, 100))
+# tfBlg <- setDT(tfBlg, keep.rownames = TRUE)
+# colnames(tfBlg) <- c("word", "cnt")
+# ptfb <- ggplot(tfblg, aes(word, cnt)) + geom_point()
+# ptfb
+# 
+# tknBlg <- tokenize(qdBlgC, verbose = TRUE)
+# 
+# 
+# blg2g <- features(dfm(qdBlgC, ngrams = 2, ignoredFeatures = stopwords("english")))
+# blg3g <- features(dfm(qdBlgC, ngrams = 3, ignoredFeatures = stopwords("english")))
+# 
+# set.seed(1234)
+# docsblg <- readLines( "final/en_US/en_US.blogs.txt")
+# docsblg <- as.data.frame(docsblg)
+# dfblg <- docsblg[sample(nrow(docsblg), 50),]
+# dfblg <- as.character(dfblg)
+# qdBlgC <- corpus(dfblg)
+# summary(qdBlgC)
+# kwic(qdBlgC, "economic", valuetype = "regex")
+# 
+# DfmBlg <- dfm(qdBlgC)
+# summary(DfmBlg)
+# StemDfmBlg <- dfm(qdBlgC, stem = TRUE)
+# tfBlg <- as.data.frame(topfeatures(StemDfmBlg, 100))
+# tfBlg <- setDT(tfBlg, keep.rownames = TRUE)
+# colnames(tfBlg) <- c("word", "cnt")
+# ptfb <- ggplot(tfBlg, aes(word, cnt)) + geom_point()
+# ptfb
+# 
+# tknBlg <- tokenize(qdBlgC, verbose = TRUE)
+# 
+# blg2g <- features(dfm(qdBlgC, ngrams = 2, ignoredFeatures = stopwords("english")))
+# blg3g <- features(dfm(qdBlgC, ngrams = 3, ignoredFeatures = stopwords("english")))
+# 
+# blg2gC <- corpus(blg2g)
+# summary(blg2g)
+# 
+# dfBlg2g <- dfm(blg2gC)
+# tfblg2g <- as.data.frame(topfeatures(dfBlg2g, 5000))
+# tfblg2g <- setDT(tfblg2g, keep.rownames = TRUE)
+# colnames(tfblg2g) <- c("2gram", "cnt")
+# 
+# blg3gC <- corpus(blg3g)
+# summary(blg3g)
+# 
+# dfBlg3g <- dfm(blg3gC)
+# tfblg3g <- as.data.frame(topfeatures(dfBlg3g, 5000))
+# tfblg3g <- setDT(tfblg3g, keep.rownames = TRUE)
+# colnames(tfblg3g) <- c("3gram", "cnt")
 
 
 library(quanteda); library(data.table); library(ggplot2)
@@ -290,6 +290,7 @@ p <-gsub("[^[:alpha:][:space:]']", " ", p)
 p <- gsub("'", "", p)
 p <- tail(strsplit(p,split=" ")[[1]],5)
 p <- paste(p, sep = " ", collapse = " ")
+p <- tolower(p)
 
 p5 <- t(as.data.frame(strsplit(p, " ", fixed = TRUE)))
 p5 <- as.data.frame(p5)
