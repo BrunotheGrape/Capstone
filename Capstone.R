@@ -186,17 +186,17 @@ BWL <- as.vector(BWL)
 #pattern <- paste0("\\b(?:", paste(BWL, collapse = "|"), ")\\b ?")
 
 dfblg <- as.data.frame(docsblg)
-dfblg <- dfblg[sample(nrow(dfblg), 500000),]
+dfblg <- dfblg[sample(nrow(dfblg), 100000),]
 dfblg <- gsub(x = dfblg, pattern = paste(BWL, collapse = "|"), replacement = "")
 dfblg <-gsub("[^[:alpha:][:space:]']", " ", dfblg)
 dfblg <- gsub("'", "", dfblg)
 dfnws <- as.data.frame(docsnws)
-dfnws <- dfnws[sample(nrow(dfnws), 500000),]
+dfnws <- dfnws[sample(nrow(dfnws), 100000),]
 dfnws <- gsub(x = dfnws, pattern = paste(BWL, collapse = "|"), replacement = "")
 dfnws <-gsub("[^[:alpha:][:space:]']", " ", dfnws)
 dfnws <- gsub("'", "", dfnws)
 dftwt <- as.data.frame(docstwt)
-dftwt <- dftwt[sample(nrow(dftwt), 500000),]
+dftwt <- dftwt[sample(nrow(dftwt), 100000),]
 dftwt <- gsub(x = dftwt, pattern = paste(BWL, collapse = "|"), replacement = "")
 dftwt <-gsub("[^[:alpha:][:space:]']", " ", dftwt)
 dftwt <- gsub("'", "", dftwt)
@@ -283,6 +283,13 @@ FtN1 <- setDT(MatN1, keep.rownames = TRUE)
 colnames(FtN1) <- c("Monogram", "Frequency")
 FtN1 <- arrange(FtN1, desc(Frequency))
 FtN1$PRED <- FtN1$Monogram
+
+write.csv(FtN6, file = "FtN6.csv")
+write.csv(FtN5, file = "FtN5.csv")
+write.csv(FtN4, file = "FtN4.csv")
+write.csv(FtN3, file = "FtN3.csv")
+write.csv(FtN2, file = "FtN2.csv")
+write.csv(FtN1, file = "FtN1.csv")
 
 p <- c("now at the end of the")
 p <- gsub(x = p, pattern = paste(BWL, collapse = "|"), replacement = "")
